@@ -29,6 +29,13 @@ This project extends the standard LiveKit Voice Agent with a custom semantic int
 * **Language Detection Heuristic:** The current language detection relies on script regex (`/[अ-ह]/`). It may not correctly identify Romanized Hindi (Hinglish) without context.
 * **Turn Detector Sensitivity:** If the native LiveKit `turnDetection` threshold is set too low, it may trigger a turn before the semantic interceptor has a chance to emit an "ignore" event.
 
+## Optional Persistence (Not Implemented currently)
+Right now, filler updates are stored in memory and reset on restart.
+If the project grows, filler lists can be persisted in:
+-JSON File
+-Redis
+-SQLite / PostgreSQL
+
 ## Steps to Test
 
 ### 1. Start the Agent
