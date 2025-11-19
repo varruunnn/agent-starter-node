@@ -82,9 +82,6 @@ class VADInterceptor extends EventEmitter {
 
     if (!this.agentSpeaking) {
       console.log(`[VAD DEBUG] Agent is quiet → treating as real user speech`);
-      // We don't necessarily need to interrupt here as the native VAD will handle it, 
-      // but we emit for consistency if you want custom logic.
-      // this.emit('interrupt', { reason: 'agent-quiet', text });
       return;
     }
 
@@ -98,18 +95,15 @@ class VADInterceptor extends EventEmitter {
     this.emit('interrupt', { reason: 'speech', text });
   }
 }
-
 const vadInterceptor = new VADInterceptor();
 
 const app = express();
 app.use(express.json());
 
-// ->dynamic get all filler words
 app.get('/fillers', (req, res) => {
   res.json({ fillers: FILLERS });
 });
 
-// ->dynamic update filler list for a language
 app.post('/fillers/:lang', (req, res) => {
   const { lang } = req.params;
   const { words } = req.body;
@@ -117,7 +111,6 @@ app.post('/fillers/:lang', (req, res) => {
   if (!Array.isArray(words)) {
     return res.status(400).json({ error: "words must be an array" });
   }
-
   if (lang in FILLERS) {
     FILLERS[lang as LanguageCode] = words;
     console.log(`[DYNAMIC] Updated filler list for ${lang}:`, words);
@@ -127,7 +120,6 @@ app.post('/fillers/:lang', (req, res) => {
   }
 });
 
-// ->dynamic server start
 app.listen(3030, () => {
   console.log("Dynamic Filler API running at http://localhost:3030");
 });
